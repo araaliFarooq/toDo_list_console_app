@@ -1,1 +1,134 @@
-from src.accounts import User
+from src.accounts import User, accounts
+from src.tasks import todo_list, Task
+import sys
+
+
+class Menu:
+    '''display'''
+    def __init__(self):
+        self.choices = {
+            "1": self.add_user,
+            "2": self.user_login,
+            "3": self.quit
+        }
+
+    def display_menu(self):
+        print('''
+        User Menu (str):
+        1. Add User
+        2. Login
+        3. Quit
+        ''')
+
+    def run(self):
+        '''Display the menu and respond to 
+           user input choices, 
+        '''
+        while True:
+            self.display_menu()
+            choice = input("Enter an option: ")
+            action = self.choices.get(choice)
+            if action:
+                action()
+            else:
+                print("{0} is not a valid choice".format(choice))
+    
+    def add_user(self):
+        '''Takes user input and adds to the list'''
+        username = input("Enter username: ")
+        password = input("Enter password: ")
+        new_user = User(username, password)
+        if (new_user.add_account()):
+            print("User Registration successful")
+            print("")
+            self.show_users()
+        else: 
+            print("User Registration failed") 
+        
+
+    def user_login(self):
+        username = input("enter username: ")
+        password = input("enter password: ")
+        _login = User(username, password)
+        if _login.login():
+            print("Sucessfully logged in")
+            print("")
+            print('''
+            User Menu (str):
+            1. Add Task
+            2. Finish Task
+            3. Delete Task
+            4. Delete All Tasks
+            5. Quit
+            ''')
+            print("")
+            choice = input("choose option: ")
+            if choice == 1:
+                self.create_new_task()
+            elif choice == 2:
+                self.finish_a_task()
+            elif choice == 3:
+                self.delete_a_task()
+            elif choice == 4:
+                self.delete_all_tasks()
+            else:
+                self.quit()        
+        else:
+            print("failed to login")
+    
+    def create_new_task(self):
+        title = input("Enter task title: ")
+        status = "to-do"
+        task_id = len(todo_list)+1
+        new_task = Task(task_id, title, status)
+        if(new_task.create_task()):
+            print("successfully added task")
+            print(" ")
+            self.show_tasks()
+        else:
+            print("Failed to add task")    
+
+    def show_tasks(self):
+        for task in todo_list:
+            print("Task Id: {0} : \nTask: {1} : \nStatus: {2} :".format(
+                task.task_id, task.title, task.status
+            ))
+
+    def show_users(self):
+        if len(accounts) > 0:
+            for user in accounts:
+                print("Username: {0}  \nPassword: {1} ".format(
+                    user.username, user.password
+                ))
+        else:
+            print("No user added yet")               
+
+    def finish_a_task(self):
+        task_id = input("Enter Task Id: ")
+        if (Task.mark_as_finished(task_id)):
+            print("successfully finisged Task")
+            self.show_tasks()
+        else:
+            print("Task Not Updated or doest exist")
+
+
+    def delete_a_task(self):
+        task_id = input("Enter Task Id: ")
+        if (Task.delete_task(task_id)):
+            print("successfully deleted Task")
+        else:
+            print("Task Not Deleted or doest exist")
+
+    def delete_all_tasks(self):
+        if (Task.delete_all_tasks()):
+            print("successfully deleted all Tasks")
+        else:
+            print("No Task Deleted")        
+
+    def quit(self):
+        '''exits the system'''
+        print("Thank you for using the system today")
+        sys.exit(0)
+
+if __name__ == '__main__':
+    Menu().run()

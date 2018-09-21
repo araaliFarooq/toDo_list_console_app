@@ -6,10 +6,13 @@ class Task:
         self.title   = title
         self.status  = status
 
+     # method to enable us acess class attributes as items 
+    def __getitem__(self,item):
+        return getattr(self, item)     
+
     def create_task(self):
-        if (todo_list.append(self)):
-            return True
-        return False
+        todo_list.append(self)
+        return True
 
     @staticmethod
     def delete_task(task_id):
@@ -32,9 +35,9 @@ class Task:
         return False
 
     @staticmethod
-    def delete_all_task():
+    def delete_all_tasks():
         if len(todo_list) > 0:
             todo_list.clear()
             return True
         return False
-        
+
