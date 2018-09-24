@@ -12,7 +12,7 @@ class Validation:
     @staticmethod
     def validate_task(title):
         if not title:
-            return "No question title was given"
+            return "No title was given"
         if title == "  ":
             return "No title was given"
 
