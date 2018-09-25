@@ -11,7 +11,13 @@ class Task:
         return getattr(self, item)     
 
     def create_task(self):
-        todo_list.append(self)
+        task = dict(
+            task_id = self.task_id,
+            title = self.title,
+            status = self.status
+            )
+
+        todo_list.append(task)
         return True
 
     @staticmethod
@@ -29,15 +35,17 @@ class Task:
         if any(tsk["task_id"] == int(task_id) for tsk in todo_list):
             for tsk in range(len(todo_list)):
                 if todo_list[tsk]["task_id"] == int(task_id):
-                    todo_list[tsk]["status"]= "Finished"
+                    todo_list[tsk]["status"] = "Finished"
                     return True
                 return False
+            # for task in todo_list:
+            #     task.update((k, "Finished") for k, v in task.iteritems() if v == "to-do")
         return False
 
     @staticmethod
     def delete_all_tasks():
         if len(todo_list) > 0:
-            todo_list.clear()
+            del todo_list[:]
             return True
         return False
 

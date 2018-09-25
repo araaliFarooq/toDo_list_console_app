@@ -14,7 +14,7 @@ class Menu:
 
     def display_menu(self):
         print('''
-        User Menu (str):
+        User Menu:
         1. Add User
         2. Login
         3. Quit
@@ -26,7 +26,7 @@ class Menu:
         '''
         while True:
             self.display_menu()
-            choice = input("Enter an option: ")
+            choice = raw_input("Enter an option: ")
             action = self.choices.get(choice)
             if action:
                 action()
@@ -35,8 +35,8 @@ class Menu:
     
     def add_user(self):
         '''Takes user input and adds to the list'''
-        username = input("Enter username: ")
-        password = input("Enter password: ")
+        username = raw_input("Enter username: ")
+        password = raw_input("Enter password: ")
         new_user = User(username, password)
         if (new_user.add_account()):
             print("User Registration successful")
@@ -47,37 +47,43 @@ class Menu:
         
 
     def user_login(self):
-        username = input("enter username: ")
-        password = input("enter password: ")
+        username = raw_input("enter username: ")
+        password = raw_input("enter password: ")
         _login = User(username, password)
         if _login.login():
             print("Sucessfully logged in")
             print("")
-            print('''
-            User Menu (str):
+            while True:
+                self.show_user_menu()
+                continue
+               
+        else:
+            print("failed to login")
+    
+    def show_user_menu(self):
+        print('''
+            User Menu:
             1. Add Task
             2. Finish Task
             3. Delete Task
             4. Delete All Tasks
             5. Quit
             ''')
-            print("")
-            choice = input("choose option: ")
-            if choice == 1:
-                self.create_new_task()
-            elif choice == 2:
-                self.finish_a_task()
-            elif choice == 3:
-                self.delete_a_task()
-            elif choice == 4:
-                self.delete_all_tasks()
-            else:
-                self.quit()        
-        else:
-            print("failed to login")
+        print("")
+        choice = input("choose option: ")
+        if choice == 1:
+            self.create_new_task()
+        elif choice == 2:
+            self.finish_a_task()
+        elif choice == 3:
+            self.delete_a_task()
+        elif choice == 4:
+            self.delete_all_tasks()
+        elif choice == 5:
+            self.quit()     
     
     def create_new_task(self):
-        title = input("Enter task title: ")
+        title = raw_input("Enter task title: ")
         status = "to-do"
         task_id = len(todo_list)+1
         new_task = Task(task_id, title, status)
@@ -90,8 +96,8 @@ class Menu:
 
     def show_tasks(self):
         for task in todo_list:
-            print("Task Id: {0} : \nTask: {1} : \nStatus: {2} :".format(
-                task.task_id, task.title, task.status
+            print("Task Id: {0}  \nTask: {1}  \nStatus: {2} ".format(
+                task["task_id"], task["title"], task["status"]
             ))
 
     def show_users(self):
@@ -104,16 +110,16 @@ class Menu:
             print("No user added yet")               
 
     def finish_a_task(self):
-        task_id = input("Enter Task Id: ")
+        task_id = raw_input("Enter Task Id: ")
         if (Task.mark_as_finished(task_id)):
-            print("successfully finisged Task")
+            print("successfully finished Task")
             self.show_tasks()
         else:
             print("Task Not Updated or doest exist")
 
 
     def delete_a_task(self):
-        task_id = input("Enter Task Id: ")
+        task_id = raw_input("Enter Task Id: ")
         if (Task.delete_task(task_id)):
             print("successfully deleted Task")
         else:
