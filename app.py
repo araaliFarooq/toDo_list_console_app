@@ -27,7 +27,7 @@ class Menu:
         '''
         while True:
             self.display_menu()
-            choice = raw_input("Enter an option: ").strip()
+            choice = raw_input("Enter an option: ")
             action = self.choices.get(choice)
             if action:
                 action()
@@ -36,8 +36,8 @@ class Menu:
     
     def add_user(self):
         '''Takes user input and adds to the list'''
-        username = raw_input("Enter username: ").strip()
-        password = raw_input("Enter password: ").strip()
+        username = raw_input("Enter username: ")
+        password = raw_input("Enter password: ")
 
         valid = Validation.auth_validation(username, password)
         if valid:
@@ -56,8 +56,8 @@ class Menu:
             
 
     def user_login(self):
-        username = raw_input("enter username: ").strip()
-        password = raw_input("enter password: ").strip()
+        username = raw_input("enter username: ")
+        password = raw_input("enter password: ")
 
         valid = Validation.auth_validation(username, password)
         if valid:
@@ -84,7 +84,7 @@ class Menu:
             5. Quit
             ''')
         print("")
-        choice = input("choose option: ").strip()
+        choice = input("choose option: ")
         if choice == 1:
             self.create_new_task()
         elif choice == 2:
@@ -99,7 +99,7 @@ class Menu:
             print("{0} is not a valid choice".format(choice))        
     
     def create_new_task(self):
-        title = raw_input("Enter task title: ").strip()
+        title = raw_input("Enter task title: ")
         status = "to-do"
         task_id = len(todo_list)+1
 
@@ -131,7 +131,7 @@ class Menu:
             print("No user added yet")               
 
     def finish_a_task(self):
-        task_id = raw_input("Enter Task Id: ").strip()
+        task_id = raw_input("Enter Task Id: ")
 
         valid = Validation.validate_id_type(task_id)
         if valid:
@@ -145,7 +145,7 @@ class Menu:
 
 
     def delete_a_task(self):
-        task_id = raw_input("Enter Task Id: ").strip()
+        task_id = raw_input("Enter Task Id: ")
 
         valid = Validation.validate_id_type(task_id)
         if valid:
