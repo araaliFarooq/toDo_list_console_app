@@ -1,5 +1,6 @@
 from src.accounts import User, accounts
 from src.tasks import todo_list, Task
+from src.validation import Validation
 import sys
 
 
@@ -37,28 +38,41 @@ class Menu:
         '''Takes user input and adds to the list'''
         username = raw_input("Enter username: ")
         password = raw_input("Enter password: ")
-        new_user = User(username, password)
-        if (new_user.add_account()):
-            print("User Registration successful")
-            print("")
-            self.show_users()
-        else: 
-            print("User Registration failed") 
-        
+
+        valid = Validation.auth_validation(username, password)
+        if valid:
+            print(valid)
+        else:    
+            if not Validation.validate_characters(username):
+                print("Include letters in your username")
+            else:    
+                new_user = User(username, password)
+                if (new_user.add_account()):
+                    print("User Registration successful")
+                    print("")
+                    self.show_users()
+                else: 
+                    print("User Registration failed") 
+            
 
     def user_login(self):
         username = raw_input("enter username: ")
-        password = raw_input("enter password: ")
-        _login = User(username, password)
-        if _login.login():
-            print("Sucessfully logged in")
-            print("")
-            while True:
-                self.show_user_menu()
-                continue
+        password = raw_input("enter password: ")    
+
+        valid = Validation.auth_validation(username, password)
+        if valid:
+            print(valid)
+        else:    
+            _login = User(username, password)
+            if _login.login():
+                print("Sucessfully logged in")
+                print("")
+                while True:
+                    self.show_user_menu()
+                    continue
                
-        else:
-            print("failed to login")
+            else:
+                print("failed to login")
     
     def show_user_menu(self):
         print('''
@@ -80,19 +94,26 @@ class Menu:
         elif choice == 4:
             self.delete_all_tasks()
         elif choice == 5:
-            self.quit()     
+            self.quit()
+        else:
+            print("{0} is not a valid choice".format(choice))        
     
     def create_new_task(self):
         title = raw_input("Enter task title: ")
         status = "to-do"
         task_id = len(todo_list)+1
-        new_task = Task(task_id, title, status)
-        if(new_task.create_task()):
-            print("successfully added task")
-            print(" ")
-            self.show_tasks()
+
+        valid = Validation.validate_task(title)
+        if valid:
+            print(valid)
         else:
-            print("Failed to add task")    
+            new_task = Task(task_id, title, status)
+            if(new_task.create_task()):
+                print("successfully added task")
+                print(" ")
+                self.show_tasks()
+            else:
+                print("Failed to add task")    
 
     def show_tasks(self):
         for task in todo_list:
@@ -111,19 +132,29 @@ class Menu:
 
     def finish_a_task(self):
         task_id = raw_input("Enter Task Id: ")
-        if (Task.mark_as_finished(task_id)):
-            print("successfully finished Task")
-            self.show_tasks()
+
+        valid = Validation.validate_id_type(task_id)
+        if valid:
+            print(valid)
         else:
-            print("Task Not Updated or doest exist")
+            if (Task.mark_as_finished(task_id)):
+                print("successfully finished Task")
+                self.show_tasks()
+            else:
+                print("Task Not Updated or doest exist")
 
 
     def delete_a_task(self):
         task_id = raw_input("Enter Task Id: ")
-        if (Task.delete_task(task_id)):
-            print("successfully deleted Task")
+
+        valid = Validation.validate_id_type(task_id)
+        if valid:
+            print(valid)
         else:
-            print("Task Not Deleted or doest exist")
+            if (Task.delete_task(task_id)):
+                print("successfully deleted Task")
+            else:
+                print("Task Not Deleted or doest exist")
 
     def delete_all_tasks(self):
         if (Task.delete_all_tasks()):
