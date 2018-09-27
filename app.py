@@ -36,35 +36,46 @@ class Menu:
     
     def add_user(self):
         '''Takes user input and adds to the list'''
-        username = raw_input("Enter username: ")
-        password = raw_input("Enter password: ")
-
-        valid = Validation.auth_validation(username, password)
-        if valid:
-            print(valid)
-        else:    
-            if not Validation.validate_characters(username):
+        while True:
+            name = raw_input("Enter name: ")
+            username = raw_input("Enter username: ")
+            email = raw_input("Enter email: ")
+            age = raw_input("Enter age: ")
+            gender = raw_input("Enter gender: ")
+            password = raw_input("Enter password: ")
+        
+            valid = Validation.auth_validation(name, username, email, gender, password)
+            valid_age = Validation.validate_input_type(age)
+            if valid:
+                print(valid)
+                continue
+            elif valid_age:
+                print(valid_age)
+                continue
+            elif not Validation.validate_characters(username):
                 print("Include letters in your username")
-            else:    
-                new_user = User(username, password)
-                if (new_user.add_account()):
-                    print("User Registration successful")
-                    print("")
-                    self.show_users()
-                else: 
-                    print("User Registration failed") 
+                continue
+            else:
+                break   
+        new_user = User(name, username, email, age, gender, password)
+        if (new_user.add_account()):
+            print("User Registration successful")
+            print("")
+            self.show_users()
+        else: 
+            print("User Registration failed") 
             
 
     def user_login(self):
         username = raw_input("enter username: ")
         password = raw_input("enter password: ")
 
-        valid = Validation.auth_validation(username, password)
+        valid = Validation.login_validation(username, password)
         if valid:
             print(valid)
         else:    
-            _login = User(username, password)
-            if _login.login():
+            _login = User.login(username, password)
+            if _login:
                 print("Sucessfully logged in")
                 print("")
                 while True:
@@ -81,7 +92,9 @@ class Menu:
             2. Finish Task
             3. Delete Task
             4. Delete All Tasks
-            5. Quit
+            5. Edit password
+            6. Edit email
+            7. Quit
             ''')
         print("")
         choice = input("choose option: ")
@@ -94,7 +107,11 @@ class Menu:
         elif choice == 4:
             self.delete_all_tasks()
         elif choice == 5:
-            self.quit()
+            self.edit_password()
+        elif choice == 6:
+            self.edit_email()
+        elif choice == 7:
+            self.quit()    
         else:
             print("{0} is not a valid choice".format(choice))        
     
@@ -124,8 +141,8 @@ class Menu:
     def show_users(self):
         if len(accounts) > 0:
             for user in accounts:
-                print("Username: {0}  \nPassword: {1} ".format(
-                    user.username, user.password
+                print("Name: {0}  \nUsername: {1} \nEmail: {2}  \nAge: {3} \nGender: {4}  \nPassword: {5}".format(
+                    user["name"], user["username"], user["email"], user["age"], user["gender"], user["password"]
                 ))
         else:
             print("No user added yet")               
@@ -133,7 +150,7 @@ class Menu:
     def finish_a_task(self):
         task_id = raw_input("Enter Task Id: ")
 
-        valid = Validation.validate_id_type(task_id)
+        valid = Validation.validate_input_type(task_id)
         if valid:
             print(valid)
         else:
@@ -147,7 +164,7 @@ class Menu:
     def delete_a_task(self):
         task_id = raw_input("Enter Task Id: ")
 
-        valid = Validation.validate_id_type(task_id)
+        valid = Validation.validate_input_type(task_id)
         if valid:
             print(valid)
         else:
@@ -160,7 +177,41 @@ class Menu:
         if (Task.delete_all_tasks()):
             print("successfully deleted all Tasks")
         else:
-            print("No Task Deleted")        
+            print("No Task Deleted")
+
+    def edit_password(self):
+        username = raw_input("enter username: ")
+        password = raw_input("enter password: ")
+        new_password = raw_input("enter new password: ")
+        
+        valid = Validation.login_validation(username, new_password)
+        if valid:
+            print(valid)
+        else:
+            edit = User.change_password(username, password, new_password)
+            if edit:
+                print("successfully changed your password")
+                print("")
+                self.show_users()
+            else:
+                print("Changes were unsuccessful")
+
+    def edit_email(self):
+        username = raw_input("enter username: ")
+        password = raw_input("enter password: ")
+        new_email = raw_input("enter new email: ")
+        
+        valid = Validation.email_change_validation(new_email)
+        if valid:
+            print(valid)
+        else:
+            edit = User.change_email(username, password, new_email)
+            if edit:
+                print("successfully changed your email")
+                print("")
+                self.show_users()
+            else:
+                print("Changes were unsuccessful")                
 
     def quit(self):
         '''exits the system'''
