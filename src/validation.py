@@ -42,7 +42,7 @@ class Validation:
             return "password is missing"
         if password == "  ":
             return "password is missing"
-        if re.match("r'^(?=.*[a-zA-Z\d\S])(?=.*[!@#$%^&*+-_])[a-zA-Z\d!@#$%^&_*_+-_]{6,10}$'", password) == None:
+        if re.match(r"^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*+])[a-zA-Z\d!@#$%^&*+]{6,10}$", password) == None:
             return "password should contain A capital letter, a small letter, a digit and a special character"    
         if gender == "  ":
             return "gender is missing"
@@ -59,7 +59,7 @@ class Validation:
             return "password is missing"
         if password == " ":
             return "password is missing"
-        if re.match("r'^(?=.*[a-zA-Z\d\S])(?=.*[!@#$%^&*+-_])[a-zA-Z\d!@#$%^&_*_+-_]{5,10}+$'",password) == None:
+        if re.match(r"^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*+])[a-zA-Z\d!@#$%^&*+]{6,10}$",password) == None:
             return "password should contain A capital letter, a small letter, a digit and a special character"      
 
     @staticmethod
